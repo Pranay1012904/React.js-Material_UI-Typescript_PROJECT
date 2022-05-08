@@ -23,7 +23,9 @@ export const useProviderAuth = () => {
       };
     }
   };
-  const logout = () => {};
+  const logout = () => {
+    setUser(null);
+  };
   return {
     user,
     loading,
