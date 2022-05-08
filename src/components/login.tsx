@@ -13,8 +13,9 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { MySnack } from "./snackBar";
-import CloseIcon from "@material-ui/icons/Close";
 import ExtensionIcon from "@material-ui/icons/Extension";
+import { UserLogin } from "../api";
+import { useAuth } from "../hooks";
 const useStyles = {
   parent: {
     display: "flex",
@@ -69,11 +70,13 @@ const Login: React.FunctionComponent<WithStyles> = (props) => {
   const [login, setLogin] = React.useState(false);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [severe, setSevere] = useState("");
+  const [severe, setSevere] = useState("success");
+  const auth = useAuth();
+  console.log(auth);
   const handleClose = () => {
     setOpen(false);
   };
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLogin(true);
     if (!email || !password) {
@@ -81,6 +84,19 @@ const Login: React.FunctionComponent<WithStyles> = (props) => {
       setMessage("Please Enter Valid Email/Password!");
       setLogin(false);
       setSevere("error");
+    } else {
+      const response: any = await auth.login(email, password);
+      console.log(response);
+      if (response?.success) {
+        setOpen(true);
+        setMessage("Login Successfull");
+        setSevere("success");
+      } else {
+        setOpen(true);
+        setMessage("Invalid Username/Password!!");
+        setSevere("error");
+        setLogin(false);
+      }
     }
   };
   return (
