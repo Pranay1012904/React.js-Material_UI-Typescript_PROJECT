@@ -1,13 +1,11 @@
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./components/App";
+import { AuthProvider } from "./providers/AuthProvider";
 
-/*const root = ReactDOM.createRoot(
+ReactDOM.render(
+  <AuthProvider>
+    <App />
+  </AuthProvider>,
   document.getElementById("root") as HTMLDivElement
 );
-root.render(
-  <ToastProvider autoDismiss autoDismissTimeout={5000} placement="top-left">
-    <App />
-  </ToastProvider>
-);*/
-ReactDOM.render(<App />, document.getElementById("root") as HTMLDivElement);

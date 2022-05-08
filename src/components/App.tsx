@@ -30,6 +30,7 @@ const App: React.FunctionComponent<WithStyles> = (props) => {
     const resp = GetPosts(1, 5);
     resp
       .then((response: any) => {
+        console.log("----", response);
         return response.data;
       })
       .then((data: any) => {
