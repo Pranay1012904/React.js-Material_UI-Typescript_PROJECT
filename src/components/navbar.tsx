@@ -29,9 +29,15 @@ const useStyles = {
     marginLeft: "1vw",
   },
 };
+interface myProp {
+  user: null;
+  login: (email: string, password: string) => void;
+  logout: () => void;
+  loading: boolean;
+}
 const NavBar: React.FunctionComponent<WithStyles> = (props) => {
   const { classes } = props;
-  const auth: any = useAuth();
+  const auth: myProp = useAuth();
   return (
     <>
       <AppBar>
