@@ -3,7 +3,7 @@ import { useProviderAuth } from "../hooks";
 
 interface myProp {
   user: null;
-  login: () => void;
+  login: (email: string, password: string) => void;
   logout: () => void;
   loading: boolean;
 }
@@ -17,7 +17,7 @@ const initialState = {
 export const AuthContext = createContext(initialState);
 
 export const AuthProvider: React.FunctionComponent<any> = ({ children }) => {
-  const auth = useProviderAuth();
+  const auth: myProp = useProviderAuth();
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };

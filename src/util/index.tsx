@@ -24,3 +24,5 @@ export const API_URLS = {
   searchUsers: (searchText: any) =>
     `${API_ROOT}/users/search?text=${searchText}`,
 };
+
+export const LOCALSTORAGE_TOKEN_KEY = "_ghost_reveries_";

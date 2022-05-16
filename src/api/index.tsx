@@ -1,4 +1,3 @@
-import React from "react";
 import { API_URLS } from "../util/index";
 import { APIRES } from "./responseConstants";
 import { getFormBody } from "../util/urlEncode";
@@ -51,8 +50,6 @@ export const GetPosts = (page: number, limit: number) => {
 };
 
 export const UserLogin = (email: string, password: string) => {
-  //let confirm_password = password.toString();
-  //let name = "Pranay";
   return CustomFetch(API_URLS.login(), {
     method: "POST",
     body: { email, password },

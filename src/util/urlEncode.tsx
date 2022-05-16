@@ -1,5 +1,3 @@
-import { waitForElementToBeRemoved } from "@testing-library/react";
-
 export const getFormBody = (params: any) => {
   let formBody: string[] = [];
   for (let property in params) {
