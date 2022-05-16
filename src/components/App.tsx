@@ -1,7 +1,7 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import { Grid, Typography, withStyles, WithStyles } from "@material-ui/core";
-import { Home } from "../views";
+import { Home, Settings } from "../views";
 import { NavBar, Login } from "./index";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useAuth } from "../hooks";
@@ -35,6 +35,9 @@ const App: React.FunctionComponent<WithStyles> = (props) => {
           </Route>
           <Route exact path="/login">
             <Login />
+          </Route>
+          <Route exact path="/settings">
+            <Settings />
           </Route>
           <Route>
             <Page404 />

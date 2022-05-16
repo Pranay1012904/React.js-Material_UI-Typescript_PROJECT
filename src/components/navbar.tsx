@@ -30,7 +30,7 @@ const useStyles = {
   },
 };
 interface myProp {
-  user: null;
+  user: any;
   login: (email: string, password: string) => void;
   logout: () => void;
   loading: boolean;
@@ -52,10 +52,14 @@ const NavBar: React.FunctionComponent<WithStyles> = (props) => {
             </Tooltip>
           </Grid>
           <Grid item className={classes.avatarUser}>
-            <Avatar
-              alt="Remy Sharp"
-              src="https://imageio.forbes.com/blogs-images/moneybuilder/files/2012/12/300px-Einstein_1921_portrait21.jpg?fit=bounds&format=jpg&width=300"
-            />
+            <Link to={auth.user ? "/settings" : "/"}>
+              <Tooltip title={auth.user ? "Settings" : "Home"}>
+                <Avatar
+                  alt="Remy Sharp"
+                  src="https://imageio.forbes.com/blogs-images/moneybuilder/files/2012/12/300px-Einstein_1921_portrait21.jpg?fit=bounds&format=jpg&width=300"
+                />
+              </Tooltip>
+            </Link>
             <Typography style={{ padding: "5px" }}>
               {auth.user ? auth.user?.name : "WELCOME!"}
             </Typography>
