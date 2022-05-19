@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { useProviderAuth } from "../hooks";
 
 interface myProp {
-  user: null;
+  user: any;
   login: (email: string, password: string) => void;
   logout: () => void;
   loading: boolean;

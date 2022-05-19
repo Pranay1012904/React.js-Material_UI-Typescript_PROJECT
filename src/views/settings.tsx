@@ -55,9 +55,15 @@ const useStyles = {
 const Settings: React.FunctionComponent<WithStyles> = (props) => {
   const { classes } = props;
   const auth: any = useAuth();
+  console.log("settings", auth);
+  console.log("auth:", auth);
   const [enable, setEnable] = useState(false);
   const [open, setOpen] = useState(false);
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState(""); //for snackbar
+  const [name, setName] = useState<string>(auth.user ? auth.user?.name : "");
+  const [email, setEmail] = useState(auth.user ? auth.user?.email : "");
+  const [pass, setPass] = useState(auth.user ? auth.user?.password : "");
+
   const editEnable = () => {
     enable ? setEnable(false) : setEnable(true);
     enable ? setMsg("Edit Disabled!") : setMsg("Edit Enabled!");
@@ -83,19 +89,21 @@ const Settings: React.FunctionComponent<WithStyles> = (props) => {
           <Grid item className={classes.formLabel}>
             <Typography>Name:</Typography>
             <InputBase
-              placeholder="hello"
+              placeholder="Your Name"
               className={classes.input}
-              value={auth?.user?.name}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               disabled={enable ? false : true}
             ></InputBase>
           </Grid>
           <Grid item className={classes.formLabel}>
             <Typography>E-Mail:</Typography>
             <InputBase
-              placeholder="hello"
+              placeholder="Your Email"
               className={classes.input}
-              value={auth?.user?.email}
+              value={email}
               type={"email"}
+              onChange={(e) => setEmail(e.target.value)}
               disabled={enable ? false : true}
             ></InputBase>
           </Grid>
@@ -104,17 +112,18 @@ const Settings: React.FunctionComponent<WithStyles> = (props) => {
               <Grid item className={classes.formLabel}>
                 <Typography>Password:</Typography>
                 <InputBase
-                  placeholder="hello"
+                  placeholder="Password"
                   className={classes.input}
                   type={"password"}
-                  value={auth?.user?.password}
+                  value={pass}
+                  onChange={(e) => setPass(e.target.value)}
                   disabled={enable ? false : true}
                 ></InputBase>
               </Grid>
               <Grid item className={classes.formLabel}>
                 <Typography>Confirm-Password:</Typography>
                 <InputBase
-                  placeholder="hello"
+                  placeholder="Enter New Password"
                   className={classes.input}
                 ></InputBase>
               </Grid>
