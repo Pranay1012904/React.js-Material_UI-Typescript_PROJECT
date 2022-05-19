@@ -12,13 +12,15 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 export const useProviderAuth = () => {
-  let [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
     if (userToken) {
-      user = jwt(userToken);
-      setUser(user);
+      const userDec: any = jwt(userToken);
+      console.log("hehreme:", userDec);
+      setUser(userDec);
+      console.log("updateUser:", user);
       setLoading(false);
     }
   }, []);
