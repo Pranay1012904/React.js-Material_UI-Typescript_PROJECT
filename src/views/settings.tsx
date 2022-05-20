@@ -54,21 +54,44 @@ const useStyles = {
 };
 const Settings: React.FunctionComponent<WithStyles> = (props) => {
   const { classes } = props;
+
   const auth: any = useAuth();
+
   console.log("settings", auth);
   console.log("auth:", auth);
   const [enable, setEnable] = useState(false);
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState(""); //for snackbar
-  const [name, setName] = useState<string>(auth.user ? auth.user?.name : "");
-  const [email, setEmail] = useState(auth.user ? auth.user?.email : "");
+  const [name, setName] = useState(auth.user ? auth.user?.name : "");
   const [pass, setPass] = useState(auth.user ? auth.user?.password : "");
-
+  const [cPass, setcPass] = useState("");
+  const [saving, setSaving] = useState(false);
   const editEnable = () => {
     enable ? setEnable(false) : setEnable(true);
     enable ? setMsg("Edit Disabled!") : setMsg("Edit Enabled!");
-
     setOpen(true);
+  };
+  const handleSave = async () => {
+    console.log("save:", name, pass, cPass);
+    if (!name.trim() || !pass.trim() || !cPass.trim()) {
+      setOpen(true);
+      setMsg("All Fields Are Necessary!");
+    } else if (pass !== cPass) {
+      setOpen(true);
+      setMsg("Password And Confirm Password Do Not Match!");
+    } else {
+      console.log(auth.user);
+      const response = await auth.updateUser(auth.user._id, name, pass, cPass);
+      console.log("name", name, "hookName", response);
+      if (response.success) {
+        setOpen(true);
+        setMsg("User Details Updated!");
+        setName(auth.user.name);
+      } else {
+        setOpen(true);
+        setMsg("Updation Failed!");
+      }
+    }
   };
   return (
     <>
@@ -101,10 +124,9 @@ const Settings: React.FunctionComponent<WithStyles> = (props) => {
             <InputBase
               placeholder="Your Email"
               className={classes.input}
-              value={email}
+              value={auth.user ? auth.user.email : ""}
               type={"email"}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={enable ? false : true}
+              disabled={true}
             ></InputBase>
           </Grid>
           {enable ? (
@@ -123,8 +145,11 @@ const Settings: React.FunctionComponent<WithStyles> = (props) => {
               <Grid item className={classes.formLabel}>
                 <Typography>Confirm-Password:</Typography>
                 <InputBase
-                  placeholder="Enter New Password"
+                  placeholder="Enter Confirm Password"
                   className={classes.input}
+                  type={"password"}
+                  value={cPass}
+                  onChange={(e) => setcPass(e.target.value)}
                 ></InputBase>
               </Grid>
             </>
@@ -138,7 +163,8 @@ const Settings: React.FunctionComponent<WithStyles> = (props) => {
                 <Button
                   color="primary"
                   variant="contained"
-                  onClick={() => editEnable()}
+                  onClick={() => handleSave()}
+                  disabled={saving ? true : false}
                 >
                   Save
                 </Button>

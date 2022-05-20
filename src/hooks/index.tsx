@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../providers/AuthProvider";
-import { UserLogin } from "../api/index";
+import { UserLogin, EditProfile } from "../api/index";
 import {
   setItemInLocalStorage,
   removeItemFromLocalStorage,
@@ -8,6 +8,7 @@ import {
 } from "../util/localStorageHandler";
 import { LOCALSTORAGE_TOKEN_KEY } from "../util";
 import jwt from "jwt-decode";
+
 export const useAuth = () => {
   return useContext(AuthContext);
 };
@@ -48,10 +49,47 @@ export const useProviderAuth = () => {
     removeItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
     setUser(null);
   };
+
+  const updateUser = async (
+    userId: string,
+    name: string,
+    password: string,
+    confirm_password: string
+  ) => {
+    console.log("params n updateUsr", userId, name, password, confirm_password);
+    const response = await EditProfile(
+      userId,
+      name,
+      password,
+      confirm_password
+    );
+    console.log("Edit Profile_hooks:", response);
+    if (response.success) {
+      console.log("after edit", response.data.token);
+      if (response.data.token) {
+        localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
+        localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, response.data.token);
+      }
+      const userDec: any = jwt(
+        localStorage.getItem(LOCALSTORAGE_TOKEN_KEY) || ""
+      );
+      setUser(userDec);
+      console.log("decoded er", userDec);
+      return {
+        success: response.success,
+      };
+    } else {
+      return {
+        success: response.success,
+        message: response.message,
+      };
+    }
+  };
   return {
     user,
     loading,
     login,
     logout,
+    updateUser,
   };
 };
