@@ -1,6 +1,7 @@
 import { API_URLS } from "../util/index";
 import { APIRES } from "./responseConstants";
 import { getFormBody } from "../util/urlEncode";
+import { LOCALSTORAGE_TOKEN_KEY } from "../util";
 interface configProp {
   headers: any;
   customConfig: any;
@@ -8,10 +9,13 @@ interface configProp {
 }
 
 const CustomFetch = async (url: any, { body, ...customConfig }: any) => {
+  const token = window.localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
   const headers = {
+    Authorization: `Bearer ${token}`,
     "content-type": "application/x-www-form-urlencoded",
     Accept: "application/json",
   };
+
   const config: configProp = {
     headers,
     ...customConfig,
@@ -19,14 +23,15 @@ const CustomFetch = async (url: any, { body, ...customConfig }: any) => {
   if (body) {
     config.body = getFormBody(body);
   }
-  console.log("ccc", config);
+  //console.log("ccc", config);
+  //console.log("uuu", url);
   try {
     const response = await fetch(url, config);
     const resData: APIRES = await response.json();
-    console.log("///-", resData);
+    //console.log("///-", resData);
     if (resData.success) {
       return {
-        data: resData.data,
+        data: resData.data, //in case of editUser data has token & user
         message: resData.message,
         success: resData.success,
       };
@@ -53,5 +58,17 @@ export const UserLogin = (email: string, password: string) => {
   return CustomFetch(API_URLS.login(), {
     method: "POST",
     body: { email, password },
+  });
+};
+
+export const EditProfile = (
+  userId: string,
+  name: string,
+  password: string,
+  confirm_password: string
+) => {
+  return CustomFetch(API_URLS.editUser(), {
+    method: "POST",
+    body: { id: userId, password, confirm_password, name },
   });
 };

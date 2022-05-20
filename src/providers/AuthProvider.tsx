@@ -6,12 +6,24 @@ interface myProp {
   login: (email: string, password: string) => void;
   logout: () => void;
   loading: boolean;
+  updateUser: (
+    userId: string,
+    name: string,
+    password: string,
+    confirm_password: string
+  ) => void;
 }
 const initialState = {
   user: null,
   login: (email: string, password: string) => {},
   logout: () => {},
   loading: true,
+  updateUser: (
+    userId: string,
+    name: string,
+    password: string,
+    confirm_password: string
+  ) => {},
 };
 
 export const AuthContext = createContext(initialState);
