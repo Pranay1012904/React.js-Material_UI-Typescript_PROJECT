@@ -74,7 +74,7 @@ export const useProviderAuth = () => {
         localStorage.getItem(LOCALSTORAGE_TOKEN_KEY) || ""
       );
       setUser(userDec);
-      console.log("decoded er", userDec);
+      console.log("decoded er", user);
       return {
         success: response.success,
       };

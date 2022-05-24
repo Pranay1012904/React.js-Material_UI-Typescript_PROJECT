@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Typography,
@@ -11,6 +11,8 @@ import {
 import { MySnack } from "../components/snackBar";
 import { withStyles } from "@material-ui/styles";
 import { useAuth } from "../hooks";
+import { LOCALSTORAGE_TOKEN_KEY } from "../util";
+import jwt from "jwt-decode";
 const useStyles = {
   container: {
     width: "100vw",
@@ -54,18 +56,25 @@ const useStyles = {
 };
 const Settings: React.FunctionComponent<WithStyles> = (props) => {
   const { classes } = props;
-
   const auth: any = useAuth();
-
-  console.log("settings", auth);
-  console.log("auth:", auth);
+  console.log("settings", auth.user);
   const [enable, setEnable] = useState(false);
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState(""); //for snackbar
-  const [name, setName] = useState(auth.user ? auth.user?.name : "");
-  const [pass, setPass] = useState(auth.user ? auth.user?.password : "");
+  const [name, setName] = useState("");
+  const [pass, setPass] = useState("");
   const [cPass, setcPass] = useState("");
   const [saving, setSaving] = useState(false);
+  useEffect(() => {
+    if (auth.user) {
+      setName(auth.user?.name);
+    } else {
+      const token = LOCALSTORAGE_TOKEN_KEY;
+      const userEnc = localStorage.getItem(token);
+      const userDec: any = jwt(userEnc ? userEnc : "");
+      setName(userDec.name);
+    }
+  }, [auth.user]);
   const editEnable = () => {
     enable ? setEnable(false) : setEnable(true);
     enable ? setMsg("Edit Disabled!") : setMsg("Edit Enabled!");
@@ -80,7 +89,6 @@ const Settings: React.FunctionComponent<WithStyles> = (props) => {
       setOpen(true);
       setMsg("Password And Confirm Password Do Not Match!");
     } else {
-      console.log(auth.user);
       const response = await auth.updateUser(auth.user._id, name, pass, cPass);
       console.log("name", name, "hookName", response);
       if (response.success) {

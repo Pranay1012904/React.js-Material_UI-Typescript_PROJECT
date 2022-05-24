@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { withStyles } from "@material-ui/styles";
+import { Redirect, useHistory } from "react-router-dom";
 import {
   Grid,
   Card,
@@ -99,6 +100,9 @@ const Login: React.FunctionComponent<WithStyles> = (props) => {
       }
     }
   };
+  if (auth.user) {
+    return <Redirect to="/" />;
+  }
   return (
     <>
       <Grid className={classes.parent}>
