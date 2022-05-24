@@ -12,6 +12,7 @@ import {
   Typography,
   InputBase,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
@@ -74,6 +75,7 @@ interface objectType {
   likes: any[];
   updatedAt: string;
   user: {
+    _id: string;
     name: string;
     email: string;
   };
@@ -118,7 +120,18 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
                     <MoreVertIcon />
                   </IconButton>
                 }
-                title={post.user.name}
+                title={
+                  <Link
+                    to={{
+                      pathname: `/profile/${post.user._id}`,
+                      state: {
+                        user: post.user,
+                      },
+                    }}
+                  >
+                    {post.user.name}
+                  </Link>
+                }
                 subheader={post.user.email}
               />
               <Divider />
