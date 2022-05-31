@@ -1,3 +1,4 @@
+//This is one way of fetching user details. It does not use api fetch and gets data from the fetched post object itself.
 import React from "react";
 import {
   Card,
@@ -119,4 +120,4 @@ const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
   );
 };
 
-export default withStyles(useStyles)(UserProfile);
+//export default withStyles(useStyles)(UserProfile);

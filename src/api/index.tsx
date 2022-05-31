@@ -72,3 +72,11 @@ export const EditProfile = (
     body: { id: userId, password, confirm_password, name },
   });
 };
+//userInfo: (userId: any) => `${API_ROOT}/users/${userId}`,
+
+export const fetchUserInfo = (userId: string) => {
+  console.log("api---", userId);
+  return CustomFetch(API_URLS.userInfo(userId), {
+    method: "GET",
+  });
+};
