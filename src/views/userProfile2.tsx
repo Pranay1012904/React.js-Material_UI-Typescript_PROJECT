@@ -85,16 +85,18 @@ const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
     })();
   }, [userId]);
   const auth: any = useAuth();
+  console.log("User Friends on p2--", auth?.user);
   const userFriends = auth?.user?.friendships;
 
-  const MyFriends: any[] = userFriends.map((item: any) => {
+  const MyFriends: any[] = userFriends?.map((item: any) => {
     return item.to_user._id;
   });
 
-  if (MyFriends.indexOf(userId) !== -1) {
+  if (MyFriends?.indexOf(userId) !== -1) {
     isFriend = true;
   }
   const handleAddFriend = async () => {
+    console.log("add frnd Id:", userId);
     const newFriend = await addFriend(userId);
     if (newFriend.success) {
       const { friendship } = newFriend?.data;
@@ -110,6 +112,7 @@ const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
   };
   const handleRemoveFriend = async () => {
     const response = await removeFriend(userId);
+    console.log("remove", response);
     if (response.success) {
       auth.updateUserFriends(false, userId);
       setOpen(true);
