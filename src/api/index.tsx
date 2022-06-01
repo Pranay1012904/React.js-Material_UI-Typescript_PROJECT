@@ -80,3 +80,21 @@ export const fetchUserInfo = (userId: string) => {
     method: "GET",
   });
 };
+
+export const fetchFriends = () => {
+  return CustomFetch(API_URLS.friends(), {
+    method: "GET",
+  });
+};
+
+export const addFriend = (userId: string) => {
+  return CustomFetch(API_URLS.createFriendship(userId), {
+    method: "POST",
+  });
+};
+
+export const removeFriend = (userId: string) => {
+  return CustomFetch(API_URLS.removeFriend(userId), {
+    method: "POST",
+  });
+};

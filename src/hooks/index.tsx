@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../providers/AuthProvider";
-import { UserLogin, EditProfile } from "../api/index";
+import { UserLogin, EditProfile, fetchFriends } from "../api/index";
 import {
   setItemInLocalStorage,
   removeItemFromLocalStorage,
@@ -19,9 +19,17 @@ export const useProviderAuth = () => {
     const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
     if (userToken) {
       const userDec: any = jwt(userToken);
-      console.log("hehreme:", userDec);
+      (async () => {
+        const userFriends = await fetchFriends();
+        if (userFriends.success) {
+          userDec.friendships = userFriends.data?.friends;
+        } else {
+          console.log("User Friends Unfetched!");
+        }
+      })();
+
       setUser(userDec);
-      console.log("updateUser:", user);
+
       setLoading(false);
     }
   }, []);
@@ -56,7 +64,6 @@ export const useProviderAuth = () => {
     password: string,
     confirm_password: string
   ) => {
-    console.log("params n updateUsr", userId, name, password, confirm_password);
     const response = await EditProfile(
       userId,
       name,
@@ -85,11 +92,24 @@ export const useProviderAuth = () => {
       };
     }
   };
+  const updateUserFriends = async (addFriend: boolean, friend: any) => {
+    const newUser: any = user;
+    if (addFriend) {
+      newUser.friendships.push(friend);
+      setUser(newUser);
+    } else {
+      const updatedFriend = newUser.friendships.filter((item: any) => {
+        return item.to_user._id !== friend;
+      });
+      newUser.friendships = updatedFriend;
+    }
+  };
   return {
     user,
     loading,
     login,
     logout,
     updateUser,
+    updateUserFriends,
   };
 };
