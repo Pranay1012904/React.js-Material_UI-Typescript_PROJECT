@@ -15,18 +15,21 @@ export const useAuth = () => {
 export const useProviderAuth = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const getFrnd = async (userDec: any) => {
+    const userFriends = await fetchFriends();
+    if (userFriends.success) {
+      userDec.friendships = userFriends.data?.friends;
+    } else {
+      console.log("User Friends Unfetched!");
+    }
+  };
   useEffect(() => {
     const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
     if (userToken) {
       const userDec: any = jwt(userToken);
-      (async () => {
-        const userFriends = await fetchFriends();
-        if (userFriends.success) {
-          userDec.friendships = userFriends.data?.friends;
-        } else {
-          console.log("User Friends Unfetched!");
-        }
-      })();
+      if (userDec) {
+        getFrnd(userDec); // to fetch user friends :-)
+      }
 
       setUser(userDec);
 
@@ -36,13 +39,28 @@ export const useProviderAuth = () => {
   const login = async (email: string, password: string) => {
     console.log("000000:" + email);
     const response = await UserLogin(email, password);
+
     if (response.success) {
       console.log("hook---", response);
-      setUser(response.data.user);
       setItemInLocalStorage(
         LOCALSTORAGE_TOKEN_KEY,
         response.data.token ? response.data.token : null
       );
+      const userToken: any = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
+      const userDec: any = jwt(userToken);
+      if (userDec) {
+        getFrnd(userDec); // to fetch user friends :-)
+      }
+      setUser(userDec);
+      /* if (user) {
+        const userFriends = await fetchFriends();
+        if (userFriends.success) {
+          //userDec.friendships = userFriends.data?.friends;
+          console.log("Friends fetched on login");
+        } else {
+          console.log("User Friends Unfetched!");
+        }
+      }*/
       return {
         success: true,
       };
@@ -98,10 +116,10 @@ export const useProviderAuth = () => {
       newUser.friendships.push(friend);
       setUser(newUser);
     } else {
-      const updatedFriend = newUser.friendships.filter((item: any) => {
+      const updatedFriend = newUser?.friendships.filter((item: any) => {
         return item.to_user._id !== friend;
       });
-      newUser.friendships = updatedFriend;
+      if (newUser.friendships) newUser.friendships = updatedFriend;
     }
   };
   return {

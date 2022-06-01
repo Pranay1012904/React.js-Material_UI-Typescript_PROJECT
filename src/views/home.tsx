@@ -87,7 +87,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const resp = GetPosts(1, 5);
+    const resp = GetPosts(1, 10);
     resp
       .then((response: any) => {
         console.log("----", response);

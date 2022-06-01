@@ -87,7 +87,7 @@ const Login: React.FunctionComponent<WithStyles> = (props) => {
       setSevere("error");
     } else {
       const response: any = await auth.login(email, password);
-      console.log(response);
+      console.log("login response", response);
       if (response?.success) {
         setOpen(true);
         setMessage("Login Successfull");
