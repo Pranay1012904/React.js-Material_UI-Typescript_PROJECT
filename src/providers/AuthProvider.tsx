@@ -12,6 +12,7 @@ interface myProp {
     password: string,
     confirm_password: string
   ) => void;
+  updateUserFriends: (addFriend: boolean, friend: any) => void;
 }
 const initialState = {
   user: null,
@@ -24,6 +25,7 @@ const initialState = {
     password: string,
     confirm_password: string
   ) => {},
+  updateUserFriends: (addFriend: boolean, friend: any) => {},
 };
 
 export const AuthContext = createContext(initialState);

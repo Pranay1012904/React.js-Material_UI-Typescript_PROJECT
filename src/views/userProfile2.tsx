@@ -10,8 +10,9 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import { fetchUserInfo } from "../api";
+import { fetchUserInfo, addFriend, removeFriend } from "../api";
 import { useAuth } from "../hooks";
+import { MySnack } from "../components/snackBar";
 const useStyle = {
   profileContainer: {
     width: "100vw",
@@ -54,7 +55,7 @@ const useStyle = {
   },
 };
 interface expectedParam {
-  userId: string | undefined;
+  userId: string;
 }
 
 const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
@@ -66,7 +67,10 @@ const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
     email: "",
   });
   const [loading, setLoading] = useState(true);
-  const [isFriend, setIsFriend] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [severity, setSeverity] = useState("success");
+  const [msg, setMsg] = useState("");
+  let isFriend: boolean = false;
   console.log("param--", userId);
   useEffect(() => {
     (async () => {
@@ -80,12 +84,39 @@ const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
       }
     })();
   }, [userId]);
-  const user: any = useAuth();
-  const userFriends = user?.user?.friendships;
-  console.log("list", user);
-  if (userFriends.indexOf(userId) !== -1) {
-    setIsFriend(true);
+  const auth: any = useAuth();
+  const userFriends = auth?.user?.friendships;
+
+  const MyFriends: any[] = userFriends.map((item: any) => {
+    return item.to_user._id;
+  });
+
+  if (MyFriends.indexOf(userId) !== -1) {
+    isFriend = true;
   }
+  const handleAddFriend = async () => {
+    const newFriend = await addFriend(userId);
+    if (newFriend.success) {
+      const { friendship } = newFriend?.data;
+
+      auth.updateUserFriends(true, friendship);
+      setOpen(true);
+      setMsg("Friend Added");
+      setSeverity("success");
+    }
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleRemoveFriend = async () => {
+    const response = await removeFriend(userId);
+    if (response.success) {
+      auth.updateUserFriends(false, userId);
+      setOpen(true);
+      setMsg("Friend Removed !");
+      setSeverity("info");
+    }
+  };
 
   return (
     <>
@@ -117,6 +148,7 @@ const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
                     className={classes.btn}
                     variant="contained"
                     color="primary"
+                    onClick={handleAddFriend}
                   >
                     Add Friend
                   </Button>
@@ -125,6 +157,7 @@ const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
                     className={classes.btn}
                     variant="contained"
                     color="secondary"
+                    onClick={handleRemoveFriend}
                   >
                     Remove Friend
                   </Button>
@@ -134,6 +167,12 @@ const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
           </Grid>
         </>
       )}
+      <MySnack
+        close={handleClose}
+        open={open}
+        message={msg}
+        severity={severity}
+      />
     </>
   );
 };
