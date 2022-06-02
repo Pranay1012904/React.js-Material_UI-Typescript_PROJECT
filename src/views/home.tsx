@@ -18,22 +18,26 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import MessageIcon from "@material-ui/icons/Message";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import FriendList from "../components/friendList";
+import { useAuth } from "../hooks";
+import { CreatePost } from "../components";
 const useStyles = {
   myContainer: {
     display: "flex",
     flexDirection: "column" as "column",
     minHeight: "40vh",
     border: "1px solid black",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "70px",
+    //justifyContent: "flex-end",
+    //alignItems: "center",
+    padding: "4vw",
+    width: "70vw",
   },
   myCard: {
     minHeight: "250px",
     backgroundColor: "lightgoldenrodyellow",
     marginTop: "15px",
     marginBottom: "15px",
-    minWidth: "35vw",
+    width: "100%",
   },
   likeDash: {
     display: "flex",
@@ -64,6 +68,11 @@ const useStyles = {
     height: "100vh",
     backgroundColor: "rgba(1,1,1,0.2)",
   },
+  masterContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    paddingTop: "70px",
+  },
 };
 interface propType {
   posts: objectType[];
@@ -86,6 +95,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
   const { classes } = props;
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const auth = useAuth();
   useEffect(() => {
     const resp = GetPosts(1, 10);
     resp
@@ -106,74 +116,78 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
           <CircularProgress color="secondary" />
         </Grid>
       ) : (
-        <Grid container className={classes.myContainer}>
-          {posts.map((post: objectType) => (
-            <Card className={classes.myCard} key={post._id.toString()}>
-              <CardHeader
-                avatar={
-                  <Avatar aria-label="recipe" className={classes.avatar}>
-                    R
-                  </Avatar>
-                }
-                action={
-                  <IconButton aria-label="settings">
-                    <MoreVertIcon />
-                  </IconButton>
-                }
-                title={
-                  <Link
-                    to={{
-                      pathname: `/profile/${post.user._id}`,
-                      state: {
-                        user: post.user,
-                      },
-                    }}
-                  >
-                    {post.user.name}
-                  </Link>
-                }
-                subheader={post.user.email}
-              />
-              <Divider />
-              <CardContent>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  component="h6"
-                >
-                  {post.content}
-                </Typography>
-              </CardContent>
-              <Divider />
-              <CardContent className={classes.likeDash}>
-                <Grid item className={classes.iconGrid}>
-                  <ThumbUpAltIcon />
-                  <Typography> 34</Typography>
-                </Grid>
-                <Grid item className={classes.iconGrid}>
-                  <MessageIcon />
-                  <Typography> 14</Typography>
-                </Grid>
-              </CardContent>
-              <Divider />
-              <CardContent>
-                <InputBase
-                  placeholder="Enter Comment..."
-                  className={classes.comment}
+        <Grid className={classes.masterContainer}>
+          <Grid container className={classes.myContainer}>
+            <CreatePost />
+            {posts.map((post: objectType) => (
+              <Card className={classes.myCard} key={post._id.toString()}>
+                <CardHeader
+                  avatar={
+                    <Avatar aria-label="recipe" className={classes.avatar}>
+                      R
+                    </Avatar>
+                  }
+                  action={
+                    <IconButton aria-label="settings">
+                      <MoreVertIcon />
+                    </IconButton>
+                  }
+                  title={
+                    <Link
+                      to={{
+                        pathname: `/profile/${post.user._id}`,
+                        state: {
+                          user: post.user,
+                        },
+                      }}
+                    >
+                      {post.user.name}
+                    </Link>
+                  }
+                  subheader={post.user.email}
                 />
-              </CardContent>
-              <Divider />
-              <CardContent>
-                {post.comments.map((comment) => (
-                  <Grid className={classes.typedComment}>
-                    <Typography>{comment?.content}</Typography>
+                <Divider />
+                <CardContent>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    component="h6"
+                  >
+                    {post.content}
+                  </Typography>
+                </CardContent>
+                <Divider />
+                <CardContent className={classes.likeDash}>
+                  <Grid item className={classes.iconGrid}>
+                    <ThumbUpAltIcon />
+                    <Typography> 34</Typography>
                   </Grid>
-                ))}
-              </CardContent>
-            </Card>
-          ))}
+                  <Grid item className={classes.iconGrid}>
+                    <MessageIcon />
+                    <Typography> 14</Typography>
+                  </Grid>
+                </CardContent>
+                <Divider />
+                <CardContent>
+                  <InputBase
+                    placeholder="Enter Comment..."
+                    className={classes.comment}
+                  />
+                </CardContent>
+                <Divider />
+                <CardContent>
+                  {post.comments.map((comment) => (
+                    <Grid className={classes.typedComment}>
+                      <Typography>{comment?.content}</Typography>
+                    </Grid>
+                  ))}
+                </CardContent>
+              </Card>
+            ))}
+          </Grid>
+          {auth.user ? <FriendList /> : ""}
         </Grid>
-      )}{" "}
+      )}
     </>
   );
 };
