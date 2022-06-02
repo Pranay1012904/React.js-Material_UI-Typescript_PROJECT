@@ -15,6 +15,9 @@ import {
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import { useAuth } from "../hooks";
+import { addNewPost } from "../api";
+import { MySnack } from "../components/snackBar";
 const useStyles = {
   cardContainer: {
     width: "100%",
@@ -56,20 +59,52 @@ const useStyles = {
 const CreatePost: React.FunctionComponent<WithStyles> = (props) => {
   const { classes } = props;
   const [post, setPost] = useState("");
-  const handlePostSubmit = () => {
-    alert(post);
+  const [posting, setPosting] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [severity, setSeverity] = useState("");
+  const auth: any = useAuth();
+  const handleClose = () => {
+    setOpen(false);
   };
+  const handlePostSubmit = () => {
+    setPosting(true);
+    if (post.trim().length > 0) {
+      const createPost = async () => {
+        setOpen(true);
+        const response = await addNewPost(post);
+        console.log(response);
+        if (response.success) {
+          setMsg("Post Created!");
+          setSeverity("success");
+          setPost("");
+        } else {
+          console.log("Error In Creating Post");
+          setMsg("Error In Creating Post");
+          setSeverity("info");
+        }
+      };
+      createPost();
+      setPosting(false);
+    } else {
+      //show notfication that post content cant be empty
+      setOpen(true);
+      setMsg("Post has no content!");
+      setSeverity("error");
+    }
+  };
+
   return (
     <>
       <Card className={classes.cardContainer}>
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" className={classes.avatar}>
-              R
+              {auth?.user?.name[0]}
             </Avatar>
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={auth?.user?.name}
+          subheader={auth?.user?.email}
         />
         <Divider />
         <InputBase
@@ -97,14 +132,20 @@ const CreatePost: React.FunctionComponent<WithStyles> = (props) => {
               variant="contained"
               className={classes.btn}
               onClick={handlePostSubmit}
+              disabled={posting}
             >
-              Post
+              {posting ? "Posting..." : "POST"}
             </Button>
           </Grid>
         </Grid>
       </Card>
+      <MySnack
+        close={handleClose}
+        open={open}
+        message={msg}
+        severity={severity}
+      />
     </>
   );
 };
-
 export default withStyles(useStyles)(CreatePost);

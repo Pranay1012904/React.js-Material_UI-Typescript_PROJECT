@@ -21,6 +21,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FriendList from "../components/friendList";
 import { useAuth } from "../hooks";
 import { CreatePost } from "../components";
+import moment from "moment";
+
 const useStyles = {
   myContainer: {
     display: "flex",
@@ -107,7 +109,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
         setPosts(data.posts);
         setLoading(false);
       });
-  }, []);
+  }, [posts]);
   console.log("HOME___", posts);
   return (
     <>
@@ -118,13 +120,13 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
       ) : (
         <Grid className={classes.masterContainer}>
           <Grid container className={classes.myContainer}>
-            <CreatePost />
+            {auth.user ? <CreatePost /> : ""}
             {posts.map((post: objectType) => (
               <Card className={classes.myCard} key={post._id.toString()}>
                 <CardHeader
                   avatar={
                     <Avatar aria-label="recipe" className={classes.avatar}>
-                      R
+                      {post.user.name[0]}
                     </Avatar>
                   }
                   action={
@@ -144,7 +146,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
                       {post.user.name}
                     </Link>
                   }
-                  subheader={post.user.email}
+                  subheader={moment(post.createdAt).format("DD/MM/YYYY")}
                 />
                 <Divider />
                 <CardContent>
