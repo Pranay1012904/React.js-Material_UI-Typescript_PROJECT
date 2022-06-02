@@ -130,45 +130,43 @@ const UserProfile: React.FunctionComponent<WithStyles> = (props) => {
           </Grid>
         </>
       ) : (
-        <>
-          <Grid className={classes.profileContainer} container>
-            <Grid className={classes.infoDisplay}>
-              <Typography variant="h5" className={classes.infoHead}>
-                USER PROFILE
-              </Typography>
-              <Grid className={classes.infoHead}>
-                <Avatar className={classes.avatar} />
-              </Grid>
-              <Grid className={classes.infoUser}>
-                <Typography variant="h5">USERNAME</Typography>
-                <Typography>{userInfo.name}</Typography>
-                <Typography variant="h5">EMAIL</Typography>
-                <Typography>{userInfo.email}</Typography>
-              </Grid>
-              <Grid className={classes.btnDash}>
-                {!isFriend ? (
-                  <Button
-                    className={classes.btn}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddFriend}
-                  >
-                    Add Friend
-                  </Button>
-                ) : (
-                  <Button
-                    className={classes.btn}
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleRemoveFriend}
-                  >
-                    Remove Friend
-                  </Button>
-                )}
-              </Grid>
+        <Grid className={classes.profileContainer} container>
+          <Grid className={classes.infoDisplay}>
+            <Typography variant="h5" className={classes.infoHead}>
+              USER PROFILE
+            </Typography>
+            <Grid className={classes.infoHead}>
+              <Avatar className={classes.avatar} />
+            </Grid>
+            <Grid className={classes.infoUser}>
+              <Typography variant="h5">USERNAME</Typography>
+              <Typography>{userInfo.name}</Typography>
+              <Typography variant="h5">EMAIL</Typography>
+              <Typography>{userInfo.email}</Typography>
+            </Grid>
+            <Grid className={classes.btnDash}>
+              {!isFriend ? (
+                <Button
+                  className={classes.btn}
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddFriend}
+                >
+                  Add Friend
+                </Button>
+              ) : (
+                <Button
+                  className={classes.btn}
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleRemoveFriend}
+                >
+                  Remove Friend
+                </Button>
+              )}
             </Grid>
           </Grid>
-        </>
+        </Grid>
       )}
       <MySnack
         close={handleClose}
