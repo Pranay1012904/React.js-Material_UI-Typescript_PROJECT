@@ -22,6 +22,8 @@ import { useAuth } from "../hooks";
 import { CreatePost } from "../components";
 import { usePosts } from "../hooks/postProviderHook";
 import moment from "moment";
+import { usePosts } from "../hooks/postProviderHook";
+import { createComment } from "../api";
 
 const useStyles = {
   myContainer: {
@@ -75,6 +77,11 @@ const useStyles = {
     justifyContent: "space-between",
     paddingTop: "70px",
   },
+  commentUser: {
+    fontWeight: "bolder" as "bolder",
+    color: "red",
+    paddingRight: "7px",
+  },
 };
 interface propType {
   posts: objectType[];
@@ -96,10 +103,26 @@ interface objectType {
 const Home: React.FunctionComponent<WithStyles> = (props) => {
   const { classes } = props;
   //const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
+  const [newCmt, setNewCmt] = useState("");
   const auth = useAuth();
-  const posts = usePosts();
+  const posts: any = usePosts();
+
   console.log("HOME___", posts);
+  const handleNewComment = async (e: any, postId: string) => {
+    console.log("enter case:", e.key);
+    if (e.key === "Enter") {
+      console.log(postId);
+      const response = await createComment(newCmt, postId);
+      console.log("after Comment--", response);
+      if (response.success) {
+        posts.addComment(response.data.comment, postId);
+      }
+    }
+  };
+  const handleCommentState = (e: any) => {
+    setNewCmt(e.target.value);
+  };
   return (
     <>
       {posts.loading ? (
@@ -110,7 +133,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
         <Grid className={classes.masterContainer}>
           <Grid container className={classes.myContainer}>
             {auth.user ? <CreatePost /> : ""}
-            {posts?.data?.map((post: objectType) => (
+            {posts?.posts?.map((post: objectType) => (
               <Card className={classes.myCard} key={post._id.toString()}>
                 <CardHeader
                   avatar={
@@ -163,14 +186,24 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
                   <InputBase
                     placeholder="Enter Comment..."
                     className={classes.comment}
+                    onKeyDown={(e) => {
+                      handleNewComment(e, post._id);
+                    }}
+                    onChange={handleCommentState}
                   />
                 </CardContent>
                 <Divider />
                 <CardContent>
                   {post.comments.map((comment) => (
-                    <Grid className={classes.typedComment}>
-                      <Typography>{comment?.content}</Typography>
-                    </Grid>
+                    <>
+                      <Grid className={classes.typedComment}>
+                        <Typography className={classes.commentUser}>
+                          {comment?.user?.name}
+                        </Typography>
+                        <Typography>{comment?.content}</Typography>
+                      </Grid>
+                      <Divider />
+                    </>
                   ))}
                 </CardContent>
               </Card>

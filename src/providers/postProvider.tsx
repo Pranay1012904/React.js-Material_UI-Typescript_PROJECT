@@ -1,19 +1,21 @@
 import { createContext } from "react";
 import { useProvidePosts } from "../hooks/postProviderHook";
-
 interface postType {
-  data: null;
+  posts: any[];
   loading: boolean;
-  addPostToState: (post: any) => void;
+  addPostsToState: (post: any) => void;
+  addComment: (comment: string, postId: string) => void;
 }
-
 const initialState = {
-  data: [],
+  posts: [],
   loading: true,
-  addPostToState: (post: any) => {},
+  addPostsToState: (post: any) => {},
+  addComment: (comment: string, postId: string) => {},
 };
+
 export const PostContext = createContext(initialState);
 export const PostProvider = ({ children }: any) => {
-  const posts: any = useProvidePosts();
+  const posts: postType | any = useProvidePosts();
+
   return <PostContext.Provider value={posts}>{children}</PostContext.Provider>;
 };

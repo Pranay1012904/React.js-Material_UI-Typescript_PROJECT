@@ -1,4 +1,6 @@
-import { useState, useContext, useEffect } from "react";
+
+import { useState, useEffect, useContext } from "react";
+
 import { PostContext } from "../providers/postProvider";
 import { GetPosts } from "../api";
 export const usePosts = () => {
@@ -7,6 +9,9 @@ export const usePosts = () => {
 export const useProvidePosts = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+
+
   useEffect(() => {
     const resp = GetPosts(1, 10);
     resp
@@ -19,14 +24,25 @@ export const useProvidePosts = () => {
         setLoading(false);
       });
   }, []);
-
-  const addPostToState = (post: any) => {
+  const addPostsToState = (post: any) => {
     const newPosts: any = [post, ...posts];
     setPosts(newPosts);
   };
+  const addComment = (comment: string, postId: string) => {
+    const newPost: any = posts.map((post: any) => {
+      if (post._id === postId) {
+        //post.comments.push
+        return { ...post, comments: [...post.comments, comment] };
+      }
+      return post;
+    });
+    setPosts(newPost);
+  };
   return {
-    data: posts,
+    posts: posts,
     loading,
-    addPostToState,
+    addPostsToState,
+    addComment,
+
   };
 };
