@@ -16,5 +16,6 @@ const initialState = {
 export const PostContext = createContext(initialState);
 export const PostProvider = ({ children }: any) => {
   const posts: postType | any = useProvidePosts();
+
   return <PostContext.Provider value={posts}>{children}</PostContext.Provider>;
 };

@@ -20,6 +20,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FriendList from "../components/friendList";
 import { useAuth } from "../hooks";
 import { CreatePost } from "../components";
+import { usePosts } from "../hooks/postProviderHook";
 import moment from "moment";
 import { usePosts } from "../hooks/postProviderHook";
 import { createComment } from "../api";
@@ -106,6 +107,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
   const [newCmt, setNewCmt] = useState("");
   const auth = useAuth();
   const posts: any = usePosts();
+
   console.log("HOME___", posts);
   const handleNewComment = async (e: any, postId: string) => {
     console.log("enter case:", e.key);
@@ -172,7 +174,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
                 <CardContent className={classes.likeDash}>
                   <Grid item className={classes.iconGrid}>
                     <ThumbUpAltIcon />
-                    <Typography> 34</Typography>
+                    <Typography> {post.likes.length} </Typography>
                   </Grid>
                   <Grid item className={classes.iconGrid}>
                     <MessageIcon />

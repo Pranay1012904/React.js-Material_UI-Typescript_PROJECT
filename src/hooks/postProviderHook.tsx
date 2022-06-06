@@ -1,4 +1,6 @@
+
 import { useState, useEffect, useContext } from "react";
+
 import { PostContext } from "../providers/postProvider";
 import { GetPosts } from "../api";
 export const usePosts = () => {
@@ -7,6 +9,8 @@ export const usePosts = () => {
 export const useProvidePosts = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+
 
   useEffect(() => {
     const resp = GetPosts(1, 10);
@@ -39,5 +43,6 @@ export const useProvidePosts = () => {
     loading,
     addPostsToState,
     addComment,
+
   };
 };
