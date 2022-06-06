@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { GetPosts } from "../api";
 import {
   Grid,
   Card,
@@ -21,6 +20,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FriendList from "../components/friendList";
 import { useAuth } from "../hooks";
 import { CreatePost } from "../components";
+import { usePosts } from "../hooks/postProviderHook";
 import moment from "moment";
 
 const useStyles = {
@@ -95,25 +95,14 @@ interface objectType {
 }
 const Home: React.FunctionComponent<WithStyles> = (props) => {
   const { classes } = props;
-  const [posts, setPosts] = useState([]);
+  //const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const auth = useAuth();
-  useEffect(() => {
-    const resp = GetPosts(1, 10);
-    resp
-      .then((response: any) => {
-        console.log("----", response);
-        return response.data;
-      })
-      .then((data: any) => {
-        setPosts(data.posts);
-        setLoading(false);
-      });
-  }, [posts]);
+  const posts = usePosts();
   console.log("HOME___", posts);
   return (
     <>
-      {loading ? (
+      {posts.loading ? (
         <Grid className={classes.loading}>
           <CircularProgress color="secondary" />
         </Grid>
@@ -121,7 +110,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
         <Grid className={classes.masterContainer}>
           <Grid container className={classes.myContainer}>
             {auth.user ? <CreatePost /> : ""}
-            {posts.map((post: objectType) => (
+            {posts?.data?.map((post: objectType) => (
               <Card className={classes.myCard} key={post._id.toString()}>
                 <CardHeader
                   avatar={
@@ -162,7 +151,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
                 <CardContent className={classes.likeDash}>
                   <Grid item className={classes.iconGrid}>
                     <ThumbUpAltIcon />
-                    <Typography> 34</Typography>
+                    <Typography> {post.likes.length} </Typography>
                   </Grid>
                   <Grid item className={classes.iconGrid}>
                     <MessageIcon />
