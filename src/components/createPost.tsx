@@ -18,6 +18,7 @@ import AttachFileIcon from "@material-ui/icons/AttachFile";
 import { useAuth } from "../hooks";
 import { addNewPost } from "../api";
 import { MySnack } from "../components/snackBar";
+import { usePosts } from "../hooks/postProviderHook";
 const useStyles = {
   cardContainer: {
     width: "100%",
@@ -64,6 +65,7 @@ const CreatePost: React.FunctionComponent<WithStyles> = (props) => {
   const [msg, setMsg] = useState("");
   const [severity, setSeverity] = useState("");
   const auth: any = useAuth();
+  const posts = usePosts();
   const handleClose = () => {
     setOpen(false);
   };
@@ -77,7 +79,7 @@ const CreatePost: React.FunctionComponent<WithStyles> = (props) => {
         if (response.success) {
           setMsg("Post Created!");
           setSeverity("success");
-          setPost("");
+          posts.addPostsToState(response.data.post);
         } else {
           console.log("Error In Creating Post");
           setMsg("Error In Creating Post");

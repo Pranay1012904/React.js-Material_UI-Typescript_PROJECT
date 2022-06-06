@@ -11,6 +11,7 @@ import {
 import { MySnack } from "../components/snackBar";
 import { withStyles } from "@material-ui/styles";
 import { useAuth } from "../hooks";
+//import {usePosts} from "../hooks/postProviderHook";
 import { LOCALSTORAGE_TOKEN_KEY } from "../util";
 import jwt from "jwt-decode";
 const useStyles = {
@@ -92,6 +93,7 @@ const Settings: React.FunctionComponent<WithStyles> = (props) => {
       const response = await auth.updateUser(auth.user._id, name, pass, cPass);
       console.log("name", name, "hookName", response);
       if (response.success) {
+        console.log("Hello---Settings", auth.user);
         setOpen(true);
         setMsg("User Details Updated!");
         setName(auth.user.name);
