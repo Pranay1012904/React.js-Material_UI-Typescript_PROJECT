@@ -56,6 +56,5 @@ export const useProvidePosts = () => {
     loading,
     addPostsToState,
     addComment,
-    toggleLikes,
   };
 };

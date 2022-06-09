@@ -20,8 +20,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FriendList from "../components/friendList";
 import { useAuth } from "../hooks";
 import { CreatePost } from "../components";
-import moment from "moment";
 import { usePosts } from "../hooks/postProviderHook";
+import moment from "moment";
 import { createComment, toggleLike } from "../api";
 import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
 //import {toggleLike} from "../api/index";
@@ -108,6 +108,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
   const [newCmt, setNewCmt] = useState("");
   const auth: any = useAuth();
   const posts: any = usePosts();
+
   console.log("HOME___", posts);
   const handleNewComment = async (e: any, postId: string) => {
     console.log("enter case:", e.key);
@@ -183,14 +184,8 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
                 <Divider />
                 <CardContent className={classes.likeDash}>
                   <Grid item className={classes.iconGrid}>
-                    <IconButton onClick={() => handlePostLike(post?._id)}>
-                      {post?.likes?.indexOf(auth?.user?._id) == -1 ? (
-                        <ThumbUpAltOutlinedIcon />
-                      ) : (
-                        <ThumbUpAltIcon />
-                      )}
-                    </IconButton>
-                    <Typography>{post.likes.length}</Typography>
+                    <ThumbUpAltIcon />
+                    <Typography> {post.likes.length} </Typography>
                   </Grid>
                   <Grid item className={classes.iconGrid}>
                     <IconButton>
