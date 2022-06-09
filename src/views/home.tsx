@@ -30,7 +30,7 @@ const useStyles = {
     display: "flex",
     flexDirection: "column" as "column",
     minHeight: "40vh",
-    border: "1px solid black",
+    //border: "1px solid black",
     //justifyContent: "flex-end",
     //alignItems: "center",
     padding: "4vw",
@@ -125,7 +125,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
     setNewCmt(e.target.value);
   };
   const handlePostLike = async (postId: string) => {
-    alert(postId);
+    //alert(postId);
     console.log(auth?.user?._id);
     const response = await toggleLike("Post", postId);
     console.log("toggle lke--", response);
@@ -184,7 +184,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
                 <Divider />
                 <CardContent className={classes.likeDash}>
                   <Grid item className={classes.iconGrid}>
-                    <ThumbUpAltIcon />
+                    <ThumbUpAltIcon onClick={() => handlePostLike(post._id)} />
                     <Typography> {post.likes.length} </Typography>
                   </Grid>
                   <Grid item className={classes.iconGrid}>
