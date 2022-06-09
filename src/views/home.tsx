@@ -22,8 +22,9 @@ import { useAuth } from "../hooks";
 import { CreatePost } from "../components";
 import moment from "moment";
 import { usePosts } from "../hooks/postProviderHook";
-import { createComment } from "../api";
-
+import { createComment, toggleLike } from "../api";
+import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
+//import {toggleLike} from "../api/index";
 const useStyles = {
   myContainer: {
     display: "flex",
@@ -49,6 +50,7 @@ const useStyles = {
   iconGrid: {
     display: "flex",
     paddingLeft: "10px",
+    alignItems: "center",
   },
   comment: {
     width: "100%",
@@ -104,7 +106,7 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
   //const [posts, setPosts] = useState([]);
   //const [loading, setLoading] = useState(true);
   const [newCmt, setNewCmt] = useState("");
-  const auth = useAuth();
+  const auth: any = useAuth();
   const posts: any = usePosts();
   console.log("HOME___", posts);
   const handleNewComment = async (e: any, postId: string) => {
@@ -121,6 +123,16 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
   const handleCommentState = (e: any) => {
     setNewCmt(e.target.value);
   };
+  const handlePostLike = async (postId: string) => {
+    alert(postId);
+    console.log(auth?.user?._id);
+    const response = await toggleLike("Post", postId);
+    console.log("toggle lke--", response);
+    if (response.success) {
+      posts.toggleLikes(auth?.user?._id, postId, response.data.deleted);
+    }
+  };
+  console.log("My Id:", auth?.user?._id);
   return (
     <>
       {posts.loading ? (
@@ -171,12 +183,20 @@ const Home: React.FunctionComponent<WithStyles> = (props) => {
                 <Divider />
                 <CardContent className={classes.likeDash}>
                   <Grid item className={classes.iconGrid}>
-                    <ThumbUpAltIcon />
-                    <Typography> 34</Typography>
+                    <IconButton onClick={() => handlePostLike(post?._id)}>
+                      {post?.likes?.indexOf(auth?.user?._id) == -1 ? (
+                        <ThumbUpAltOutlinedIcon />
+                      ) : (
+                        <ThumbUpAltIcon />
+                      )}
+                    </IconButton>
+                    <Typography>{post.likes.length}</Typography>
                   </Grid>
                   <Grid item className={classes.iconGrid}>
-                    <MessageIcon />
-                    <Typography> 14</Typography>
+                    <IconButton>
+                      <MessageIcon />
+                    </IconButton>
+                    <Typography> {post.comments.length}</Typography>
                   </Grid>
                 </CardContent>
                 <Divider />

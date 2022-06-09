@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { PostContext } from "../providers/postProvider";
 import { GetPosts } from "../api";
+
 export const usePosts = () => {
   return useContext(PostContext);
 };
@@ -34,10 +35,27 @@ export const useProvidePosts = () => {
     });
     setPosts(newPost);
   };
+  const toggleLikes = (userId: string, postId: string, deleted: boolean) => {
+    const newPosts: any = posts.map((post: any) => {
+      if (post._id === postId && !deleted) {
+        post.likes.push(userId);
+        return post;
+      } else if (post._id === postId && deleted) {
+        const newLikes: any[] = post.likes.filter(
+          (PId: string) => PId != userId
+        );
+        return { ...post, likes: newLikes };
+      }
+      return post;
+    });
+
+    setPosts(newPosts);
+  };
   return {
     posts: posts,
     loading,
     addPostsToState,
     addComment,
+    toggleLikes,
   };
 };
