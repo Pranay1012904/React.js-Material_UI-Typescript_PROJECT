@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
@@ -10,8 +10,14 @@ import {
   WithStyles,
   Typography,
   Avatar,
+  InputBase,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
 } from "@material-ui/core";
-import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
+import ImageIcon from "@material-ui/icons/Image";
+import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
 import { useAuth } from "../hooks";
 const useStyles = {
   optionPanel: {
@@ -26,7 +32,35 @@ const useStyles = {
   },
   avatarUser: {
     display: "flex",
+    flexDirection: "column" as "column",
     marginLeft: "1vw",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  siteIcon: {
+    textDecoration: "none",
+    letterSpacing: "3px",
+  },
+  userName: {
+    fontWeight: "bold" as "bold",
+    fontSize: "12px",
+    //paddingLeft: "15px",
+  },
+  searchGrid: {
+    position: "relative" as "relative",
+    marginLeft: "5vw",
+  },
+  searchBar: {
+    paddingLeft: "5px",
+    backgroundColor: "white",
+    width: "25vw",
+    borderRadius: "10px",
+  },
+  searchResult: {
+    position: "absolute" as "absolute",
+    backgroundColor: "rgba(0,0,0,0.6)",
+    height: "340px",
+    overflowY: "scroll" as "scroll",
   },
 };
 interface myProp {
@@ -37,16 +71,27 @@ interface myProp {
 }
 const NavBar: React.FunctionComponent<WithStyles> = (props) => {
   const { classes } = props;
+  const [result, setResult] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const auth: myProp = useAuth();
   return (
     <>
       <AppBar>
         <Toolbar className={classes.toolbar}>
           <Grid item>
-            <Tooltip title="SiteIcon">
+            <Tooltip title="Home">
               <IconButton>
-                <Link to="/">
-                  <AllInclusiveIcon color="secondary" />
+                <Link to="/" className={classes.siteIcon}>
+                  <span
+                    style={{
+                      color: "#2798e3",
+                      fontWeight: "900",
+                      fontFamily: "Segoe UI Emoji",
+                    }}
+                  >
+                    FREE
+                  </span>
+                  <span style={{ color: "#748691" }}>BUZZ</span>
                 </Link>
               </IconButton>
             </Tooltip>
@@ -60,9 +105,36 @@ const NavBar: React.FunctionComponent<WithStyles> = (props) => {
                 />
               </Tooltip>
             </Link>
-            <Typography style={{ padding: "5px" }}>
+            <Typography className={classes.userName}>
               {auth.user ? auth.user?.name : "WELCOME!"}
             </Typography>
+          </Grid>
+          <Grid className={classes.searchGrid}>
+            <InputBase
+              placeholder="Search..."
+              className={classes.searchBar}
+              startAdornment={<SearchOutlinedIcon />}
+              value={searchText}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+              }}
+            />
+            {result.length > 0 && (
+              <Grid container className={classes.searchResult}>
+                <List className={classes.root}>
+                  {result.map((user: any) => (
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <ImageIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary="Photos" secondary="Jan 9, 2014" />
+                    </ListItem>
+                  ))}
+                </List>
+              </Grid>
+            )}
           </Grid>
           <Grid className={classes.optionPanel}>
             {auth.user ? (

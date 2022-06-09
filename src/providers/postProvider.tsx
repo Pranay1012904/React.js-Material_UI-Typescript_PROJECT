@@ -5,12 +5,14 @@ interface postType {
   loading: boolean;
   addPostsToState: (post: any) => void;
   addComment: (comment: string, postId: string) => void;
+  toggleLikes: (userId: string, postId: string) => void;
 }
 const initialState = {
   posts: [],
   loading: true,
   addPostsToState: (post: any) => {},
   addComment: (comment: string, postId: string) => {},
+  toggleLikes: (userId: string, postId: string, deleted: boolean) => {},
 };
 
 export const PostContext = createContext(initialState);
