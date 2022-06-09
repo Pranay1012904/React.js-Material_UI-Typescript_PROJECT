@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
@@ -19,6 +19,7 @@ import {
 import ImageIcon from "@material-ui/icons/Image";
 import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
 import { useAuth } from "../hooks";
+import { searchUsers } from "../api";
 const useStyles = {
   optionPanel: {
     position: "absolute" as "absolute",
@@ -53,14 +54,22 @@ const useStyles = {
   searchBar: {
     paddingLeft: "5px",
     backgroundColor: "white",
-    width: "25vw",
+    width: "35vw",
     borderRadius: "10px",
   },
   searchResult: {
     position: "absolute" as "absolute",
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(232, 245, 188,0.7)",
     height: "340px",
     overflowY: "scroll" as "scroll",
+  },
+  searchUser: {
+    color: "red",
+    textDecoration: "none",
+  },
+  searchEmail: {
+    color: "black",
+    textDecoration: "none",
   },
 };
 interface myProp {
@@ -74,6 +83,17 @@ const NavBar: React.FunctionComponent<WithStyles> = (props) => {
   const [result, setResult] = useState([]);
   const [searchText, setSearchText] = useState("");
   const auth: myProp = useAuth();
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await searchUsers(searchText);
+      console.log("search---", response);
+      if (response.success) {
+        setResult(response.data.users);
+      }
+    }; //set response.data.users
+    if (searchText.length > 3) fetchUsers();
+    else setResult([]);
+  }, [searchText]);
   return (
     <>
       <AppBar>
@@ -123,14 +143,28 @@ const NavBar: React.FunctionComponent<WithStyles> = (props) => {
               <Grid container className={classes.searchResult}>
                 <List className={classes.root}>
                   {result.map((user: any) => (
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <ImageIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary="Photos" secondary="Jan 9, 2014" />
-                    </ListItem>
+                    <Link to={`/profile/${user._id}`}>
+                      {" "}
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar>
+                            <ImageIcon />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Typography className={classes.searchUser}>
+                              {user?.name}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography className={classes.searchEmail}>
+                              {user?.email}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                    </Link>
                   ))}
                 </List>
               </Grid>
