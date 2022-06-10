@@ -14,6 +14,16 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
+## This s  a Social Meda website. The "SIGNUP" page has not been provided delibertately.<br>
+## Modules and Components includes:<br>
+### HOME PAGE<br>
+### Log-In<Br>
+### Make Post<br>
+### Make Comment<br>
+### Make Friends<br>
+### Efficient search Bar<br>
+  and many other requisite features
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
